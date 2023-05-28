@@ -5,7 +5,7 @@ import twitterLogo from './assets/twitter-logo.svg';
 // Constants
 const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = '';
+const OPENSEA_LINK = 'https://testnets.opensea.io/';
 const TOTAL_MINT_COUNT = 50;
 
 const App = () => {
