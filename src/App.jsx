@@ -65,6 +65,13 @@ const App = () => {
 
     if (!ethereum) {
         console.log("Make sure you have metamask!");
+        toast({
+          title: 'Wallet not found',
+          description: 'Make sure you have wallet!',
+          status: 'error',
+          duration: 9000,
+          isClosable: true
+        })
         return;
     } else {
         console.log("We have the ethereum object", ethereum);
@@ -133,6 +140,14 @@ const App = () => {
       await nftTxn.wait();
       
       console.log(`Mined, see transaction: https://sepolia.etherscan.io/tx/${nftTxn.hash}`);
+
+      toast({
+        title: 'Minteado exitoso',
+        description: 'Has minteado tu nuevo NFT!',
+        status: 'success',
+        duration: 9000,
+        isClosable: true
+      })
 
     } else {
       console.log("Ethereum object doesn't exist!");
