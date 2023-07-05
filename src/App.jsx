@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import { Container, useToast, Card, Image, ButtonGroup,Divider, Button, CardBody, CardFooter } from '@chakra-ui/react'
 import './styles/App.css';
-import {useToast} from  '@chakra-ui/react';
-import { NFTE } from '@nfte/react';
+
 import myEpicNFT from './myEpicNFT.json';
-import NFTCard from './card'
 
 
 // Constants
 const OPENSEA_LINK = 'https://testnets.opensea.io/';
 const TOTAL_MINT_COUNT = 5;
-const CONTRACT_ADDRESS = "0x45daFdFc21Aba89773339168Ce263BFC86FC0D41";
+const CONTRACT_ADDRESS = "0x9b66F74Cd54838f2B7fa573463422667A792cF65";
 const contractABI = myEpicNFT.abi;
 
 
@@ -21,9 +20,8 @@ const App = () => {
   * Just a state variable we use to store our user's public wallet. Don't forget to import useState.
   */
   const [currentAccount, setCurrentAccount] = useState("");
-  const [chainIdOk, setChainIdOk] = useState(false);
   const [totalMintCount, updateMintCount] = useState(0);
-  const [currentTokenId, updateCurrentTokenId] = useState(1);
+  const [currentNFT, updateCurrentNFT] = useState(null);
   const toast = useToast();
 
   const checkIfChainIsCorrect = async () => {
@@ -135,19 +133,32 @@ const App = () => {
     if (ethereum) {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
-      const connectedContract = new ethers.Contract(CONTRACT_ADDRESS,contractABI, signer);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
 
       console.log("Going to pop wallet now to pay gas...")
-      let nftTxn = await connectedContract.makeAnEpicNFT();
+      const nftTxn = await contract.makeAnEpicNFT();
 
       console.log("Minting...please wait.")
-      await nftTxn.wait();
+      nftTxn.wait();
+
+      contract.on("Minted", (tokenId, image)=> {
+      const jsonManifestString = atob(image.substring(29))
+      console.log("jsonManifestString", jsonManifestString);
+
+          try {
+            const jsonManifest = JSON.parse(jsonManifestString);
+            console.log("jsonManifest", jsonManifest);
+            updateCurrentNFT({ id: tokenId, ...jsonManifest });
+          } catch (e) {
+            console.log(e);
+          }
+       
+      })
 
       console.log(`Minted!, see transaction: https://sepolia.etherscan.io/tx/${nftTxn.hash}`);
     
-      const count = ethers.BigNumber.from(await connectedContract.getTotalNFTs()).toNumber();
+      const count = ethers.BigNumber.from(await contract.getTotalNFTs()).toNumber();
       console.log("count", count);
-      updateCurrentTokenId(count-1)
       
       updateMintCount(totalMintCount+1);
 
@@ -199,7 +210,30 @@ const App = () => {
           )}
         </div>
 
-        <NFTCard contract={CONTRACT_ADDRESS} tokenId={1}/>
+      
+        <Container maxW='550px'>
+        {currentNFT !== null && (<Card maxW='sm'>
+  <CardBody>
+    <Image
+      src={currentNFT.image}
+      alt='Green double couch with wooden legs'
+      borderRadius='lg'
+    />
+    
+  </CardBody>
+  <Divider />
+  <CardFooter>
+    <ButtonGroup spacing='2'>
+      <Button variant='solid' colorScheme='blue'>
+        Buy now
+      </Button>
+      
+    </ButtonGroup>
+  </CardFooter>
+</Card>)} 
+  </Container>
+
+
         
       </div>
     </div>
