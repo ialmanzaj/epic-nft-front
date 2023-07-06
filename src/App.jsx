@@ -9,6 +9,7 @@ import {
   Divider,
   Button,
   CardBody,
+  Text,
   CardFooter,
 } from '@chakra-ui/react';
 import './styles/App.css';
@@ -209,12 +210,14 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">NFTs de Isaac </p>
-          <p className="sub-text">Un nuevo arte todos los dias</p>
-          <p className="sub-text">
-            <span>{totalMintCount}</span> of <span>{TOTAL_MINT_COUNT}</span>{' '}
-            NFTs minted
-          </p>
+          <Container pb={5}>
+            <p className="header gradient-text">NFT generator</p>
+            <p className="sub-text">by Isaac Almanza </p>
+            <Text display={{ base: 'block' }} as="b" className="sub-text bold">
+              Get your new combination of words
+            </Text>
+          </Container>
+
           {currentAccount === '' ? (
             renderNotConnectedContainer()
           ) : (
@@ -222,24 +225,24 @@ const App = () => {
               onClick={askContractToMintNft}
               className="cta-button connect-wallet-button"
             >
-              Mint NFT
+              Mint your NFT
             </button>
           )}
         </div>
 
-        <Container maxW="550px">
+        <Container maxW="550px" pt={6}>
           {currentNFT !== null && (
             <Card maxW="sm">
               <CardBody>
                 <Image
                   src={currentNFT.image}
-                  alt="Green double couch with wooden legs"
+                  alt={currentNFT.description}
                   borderRadius="lg"
                 />
               </CardBody>
               <Divider />
               <CardFooter>
-                <ButtonGroup spacing="2">
+                <ButtonGroup spacing="1">
                   <Button variant="solid" colorScheme="blue">
                     Buy now
                   </Button>

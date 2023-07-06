@@ -1,16 +1,15 @@
 .App {
   height: 100vh;
-  background-color: #0d1116;
+  background: linear-gradient(225deg, #bdf8b3 0%, #5a1886 100%);
   overflow: scroll;
   text-align: center;
 }
 
 .container {
   height: 100%;
-  background-color: #0d1116;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .header-container {
@@ -29,7 +28,7 @@
 }
 
 .gradient-text {
-  background: -webkit-linear-gradient(left, #60c657 30%, #35aee2 60%);
+  background: #ffffff;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
